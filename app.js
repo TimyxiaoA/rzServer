@@ -1,7 +1,9 @@
 const koa = require('koa')
 const serve = require('koa-static')
+// #专门处理history模式的中间件
 const { historyApiFallback } = require('koa2-connect-history-api-fallback')
 const path = require('path')
+// 解决生产环境跨域
 const proxy = require('koa2-proxy-middleware')
 
 const app = new koa()
@@ -9,11 +11,11 @@ const app = new koa()
 // 这句话 的意思是除接口之外所有的请求都发送给了 index.html
 app.use(
 	historyApiFallback({
-		whiteList: ['/prod-api']
+		whiteList: ['/prod-api'] // 这里的whiteList是 白名单的意思
 	})
-) // 这里的whiteList是 白名单的意思
+)
 app.use(serve(__dirname + '/public')) // 将 public下的文件静态化
-
+// 配置跨域代理
 app.use(
 	proxy({
 		targets: {
